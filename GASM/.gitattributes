@@ -1,0 +1,101 @@
+# Git attributes for GASM-Roboting
+
+# Set default behavior for text files
+* text=auto
+
+# Explicitly mark text files
+*.py text
+*.md text
+*.txt text
+*.yml text
+*.yaml text
+*.json text
+*.toml text
+*.cfg text
+*.ini text
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Mark documentation as text
+*.rst text
+*.html text
+*.css text
+*.js text
+
+# Configuration files
+Makefile text
+.gitignore text
+.gitattributes text
+requirements*.txt text
+tox.ini text
+setup.py text
+setup.cfg text
+pyproject.toml text
+MANIFEST.in text
+
+# Binary files (explicitly declared)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Archives
+*.zip binary
+*.tar.gz binary
+*.tgz binary
+
+# Python compiled files
+*.pyc binary
+*.pyo binary
+*.pyd binary
+*.so binary
+*.dll binary
+*.egg binary
+
+# Model files and data
+*.pth binary
+*.pkl binary
+*.pickle binary
+*.h5 binary
+*.hdf5 binary
+*.npy binary
+*.npz binary
+
+# URDF and mesh files
+*.urdf text
+*.xacro text
+*.dae binary
+*.stl binary
+*.obj binary
+*.ply binary
+
+# Jupyter notebooks
+*.ipynb text
+
+# Large file tracking (Git LFS)
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.pkl filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+*.hdf5 filter=lfs diff=lfs merge=lfs -text
+*.npz filter=lfs diff=lfs merge=lfs -text
+
+# Language-specific settings
+*.py diff=python
+
+# Documentation generation
+docs/_build/ export-ignore
+docs/_static/ export-ignore
+
+# Development files not for distribution
+.vscode/ export-ignore
+.idea/ export-ignore
+__pycache__/ export-ignore
+*.egg-info/ export-ignore
+build/ export-ignore
+dist/ export-ignore
+.pytest_cache/ export-ignore
+.mypy_cache/ export-ignore
+.coverage export-ignore
+htmlcov/ export-ignore

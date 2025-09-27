@@ -1,0 +1,253 @@
+# Simulation Parameters Configuration
+# Used by the URDF generator and physics simulation
+
+# Global physics parameters
+physics:
+  gravity: [0, 0, -9.81]
+  time_step: 0.001
+  solver_iterations: 10
+  contact_erp: 0.2  # Error Reduction Parameter
+  contact_cfm: 0.0001  # Constraint Force Mixing
+  restitution_threshold: 0.1
+  max_contacts_per_body: 4
+
+# Material definitions
+materials:
+  steel:
+    color: [0.7, 0.7, 0.7, 1.0]
+    friction: 0.8
+    restitution: 0.3
+    density: 7850  # kg/m³
+    young_modulus: 200e9  # Pa
+    poisson_ratio: 0.3
+    
+  plastic:
+    color: [0.2, 0.2, 0.8, 1.0]
+    friction: 0.6
+    restitution: 0.4
+    density: 1200  # kg/m³
+    young_modulus: 3e9  # Pa
+    poisson_ratio: 0.4
+    
+  rubber:
+    color: [0.1, 0.1, 0.1, 1.0]
+    friction: 1.2
+    restitution: 0.8
+    density: 1500  # kg/m³
+    young_modulus: 0.01e9  # Pa
+    poisson_ratio: 0.49
+    
+  glass:
+    color: [0.9, 0.9, 0.9, 0.3]
+    friction: 0.1
+    restitution: 0.1
+    density: 2500  # kg/m³
+    young_modulus: 70e9  # Pa
+    poisson_ratio: 0.22
+    
+  aluminum:
+    color: [0.8, 0.8, 0.8, 1.0]
+    friction: 0.7
+    restitution: 0.4
+    density: 2700  # kg/m³
+    young_modulus: 70e9  # Pa
+    poisson_ratio: 0.33
+
+# Color variants
+color_variants:
+  red: [1.0, 0.0, 0.0, 1.0]
+  green: [0.0, 1.0, 0.0, 1.0]
+  blue: [0.0, 0.0, 1.0, 1.0]
+  yellow: [1.0, 1.0, 0.0, 1.0]
+  white: [1.0, 1.0, 1.0, 1.0]
+  black: [0.0, 0.0, 0.0, 1.0]
+  orange: [1.0, 0.5, 0.0, 1.0]
+  purple: [0.5, 0.0, 1.0, 1.0]
+  cyan: [0.0, 1.0, 1.0, 1.0]
+  magenta: [1.0, 0.0, 1.0, 1.0]
+
+# Size variants configuration
+variants:
+  sizes: ['small', 'medium', 'large', 'extra_large']
+  size_multipliers:
+    small: 0.7
+    medium: 1.0
+    large: 1.3
+    extra_large: 1.6
+  colors: ['red', 'green', 'blue', 'yellow', 'white']
+
+# Conveyor belt specific parameters
+conveyor_belt:
+  default_dimensions:
+    length: 2.0
+    width: 0.5
+    height: 0.1
+    belt_thickness: 0.02
+  
+  belt_properties:
+    speed_range: [0.0, 2.0]  # m/s
+    friction_coefficient: 0.8
+    damping: 0.1
+    
+  support_structure:
+    leg_count: 4
+    leg_radius: 0.05
+    leg_height: 0.8
+    frame_thickness: 0.1
+
+# Sensor specific parameters
+sensor:
+  default_dimensions:
+    housing_size: [0.2, 0.2, 0.15]
+    lens_radius: 0.04
+    lens_length: 0.06
+    bracket_size: [0.25, 0.05, 0.3]
+  
+  joint_limits:
+    pan_range: [-3.14159, 3.14159]  # radians
+    tilt_range: [-1.5708, 1.5708]   # radians
+    max_velocity: 1.0  # rad/s
+    max_effort: 10.0   # Nm
+    
+  camera_properties:
+    horizontal_fov: 1.3962634  # radians (80 degrees)
+    image_width: 800
+    image_height: 600
+    update_rate: 30.0  # Hz
+    near_clip: 0.02
+    far_clip: 300.0
+
+# Collision detection parameters
+collision:
+  margin: 0.001
+  algorithm: "GJK"
+  contact_breaking_threshold: 0.02
+  contact_processing_threshold: 0.01
+
+# Constraint solver parameters
+solver:
+  split_impulse: true
+  split_impulse_penetration_threshold: -0.02
+  num_solver_iterations: 10
+  warm_starting: true
+  single_axis_rolling_friction_threshold: 1e30
+
+# Visualization parameters
+visualization:
+  show_collision_shapes: false
+  show_visual_shapes: true
+  show_coordinate_frames: false
+  show_inertia_tensors: false
+  wireframe_mode: false
+  
+# Texture paths (relative to assets directory)
+textures:
+  conveyor_belt: "textures/conveyor_texture.png"
+  metal_brushed: "textures/brushed_metal.png"
+  plastic_smooth: "textures/smooth_plastic.png"
+  rubber_grip: "textures/rubber_pattern.png"
+
+# Mesh paths (relative to assets directory)
+meshes:
+  conveyor_detailed: "meshes/conveyor_detailed.dae"
+  sensor_housing: "meshes/sensor_housing.obj"
+  mounting_bracket: "meshes/bracket.stl"
+
+# Object categories and their default parameters
+object_categories:
+  industrial:
+    - conveyor_belt
+    - robotic_arm
+    - sensor_mount
+    
+  sensors:
+    - camera
+    - lidar
+    - proximity_sensor
+    
+  structures:
+    - frame
+    - support
+    - platform
+
+# Quality levels for mesh generation
+quality_levels:
+  low:
+    triangle_count: 100
+    texture_resolution: 256
+    
+  medium:
+    triangle_count: 500
+    texture_resolution: 512
+    
+  high:
+    triangle_count: 2000
+    texture_resolution: 1024
+    
+  ultra:
+    triangle_count: 8000
+    texture_resolution: 2048
+
+# Environment presets
+environment_presets:
+  factory_floor:
+    gravity: [0, 0, -9.81]
+    friction: 0.8
+    restitution: 0.3
+    ambient_light: 0.4
+    
+  laboratory:
+    gravity: [0, 0, -9.81]
+    friction: 0.6
+    restitution: 0.2
+    ambient_light: 0.8
+    
+  outdoor:
+    gravity: [0, 0, -9.81]
+    friction: 0.7
+    restitution: 0.4
+    ambient_light: 1.0
+    wind: [0.1, 0.0, 0.0]  # m/s
+
+# Export formats supported
+export_formats:
+  urdf:
+    extension: ".urdf"
+    supports_joints: true
+    supports_materials: true
+    supports_physics: true
+    
+  sdf:
+    extension: ".sdf"
+    supports_joints: true
+    supports_materials: true
+    supports_physics: true
+    
+  obj:
+    extension: ".obj"
+    supports_joints: false
+    supports_materials: false
+    supports_physics: false
+    
+  stl:
+    extension: ".stl"
+    supports_joints: false
+    supports_materials: false
+    supports_physics: false
+
+# Validation settings
+validation:
+  check_mass_consistency: true
+  check_inertia_validity: true
+  check_joint_limits: true
+  check_collision_geometry: true
+  warn_on_missing_textures: true
+  error_on_invalid_links: true
+  
+  mass_limits:
+    minimum: 0.001  # kg
+    maximum: 10000  # kg
+    
+  dimension_limits:
+    minimum: 0.001  # m
+    maximum: 100    # m

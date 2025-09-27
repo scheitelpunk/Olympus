@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<robot name="conveyor_belt">
+  <!-- Main conveyor surface -->
+  <link name="belt_surface">
+    <visual>
+      <geometry>
+        <box size="2.0 0.5 0.02"/>
+      </geometry>
+      <material name="dark_gray">
+        <color rgba="0.3 0.3 0.3 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="2.0 0.5 0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="2.08" ixy="0" ixz="0" iyy="33.33" iyz="0" izz="35.41"/>
+    </inertial>
+  </link>
+
+  <!-- Support structure -->
+  <link name="support_base">
+    <visual>
+      <geometry>
+        <box size="2.0 0.5 0.8"/>
+      </geometry>
+      <material name="steel">
+        <color rgba="0.6 0.6 0.6 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="2.0 0.5 0.8"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="50.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="10.4" ixy="0" ixz="0" iyy="166.7" iyz="0" izz="177.1"/>
+    </inertial>
+  </link>
+
+  <!-- Fixed joint connecting surface to base -->
+  <joint name="surface_to_base" type="fixed">
+    <parent link="support_base"/>
+    <child link="belt_surface"/>
+    <origin xyz="0 0 0.41" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Roller 1 -->
+  <link name="roller1">
+    <visual>
+      <geometry>
+        <cylinder length="0.5" radius="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.5" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.104" ixy="0" ixz="0" iyy="0.0052" iyz="0" izz="0.104"/>
+    </inertial>
+  </link>
+
+  <!-- Roller joint -->
+  <joint name="roller1_joint" type="continuous">
+    <parent link="support_base"/>
+    <child link="roller1"/>
+    <origin xyz="-0.9 0 0.4" rpy="1.5708 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+</robot>

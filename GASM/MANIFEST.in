@@ -1,0 +1,81 @@
+# GASM-Roboting Package Manifest
+# Specifies additional files to include in the distribution package
+
+# Documentation and metadata files
+include README.md
+include LICENSE
+include CHANGELOG.md
+include MANIFEST.in
+include requirements*.txt
+include pyproject.toml
+include setup.py
+
+# Configuration files
+include *.yml
+include *.yaml
+include *.json
+include *.toml
+include *.cfg
+include *.ini
+
+# URDF and object files for robotics
+recursive-include src/spatial_agent/objects *.urdf
+recursive-include assets/urdf *.urdf
+recursive-include assets/configs *.json *.yaml *.yml
+
+# Include all source code
+recursive-include src *.py
+recursive-include src *.pyx
+recursive-include src *.pxd
+
+# Include scripts
+recursive-include scripts *.py
+recursive-include scripts *.sh
+recursive-include scripts *.bat
+
+# Include tests
+recursive-include tests *.py
+
+# Documentation
+recursive-include docs *.md
+recursive-include docs *.rst
+recursive-include docs *.txt
+recursive-include docs *.png
+recursive-include docs *.jpg
+recursive-include docs *.svg
+
+# Examples
+recursive-include examples *.py
+recursive-include examples *.md
+recursive-include examples *.json
+recursive-include examples *.yaml
+
+# Development tools
+include .gitignore
+include .gitattributes
+include .pre-commit-config.yaml
+include tox.ini
+include .flake8
+
+# Exclude unwanted files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .DS_Store
+global-exclude *.so
+global-exclude .git*
+global-exclude *.swp
+global-exclude *.swo
+global-exclude *~
+prune venv
+prune .venv
+prune env
+prune .env
+prune build
+prune dist
+prune *.egg-info
+prune .mypy_cache
+prune .pytest_cache
+prune .coverage
+prune htmlcov

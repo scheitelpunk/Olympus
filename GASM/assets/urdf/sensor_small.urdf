@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<robot name="camera_sensor_small">
+    <link name="sensor_base">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="2.0"/>
+            <inertia ixx="0.010417" iyy="0.010417" izz="0.013333" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.2 0.2 0.15"/>
+            </geometry>
+            <material name="plastic">
+                <color rgba="0.2 0.2 0.8 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.2 0.2 0.15"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.6" mu2="0.6"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <link name="sensor_lens">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.5"/>
+            <inertia ixx="0.000350" iyy="0.000350" izz="0.000400" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.04" length="0.06"/>
+            </geometry>
+            <material name="glass">
+                <color rgba="0.9 0.9 0.9 0.3"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.04" length="0.06"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.1" mu2="0.1"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <link name="mounting_bracket">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="1.0"/>
+            <inertia ixx="0.007708" iyy="0.012708" izz="0.005417" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.25 0.05 0.3"/>
+            </geometry>
+            <material name="steel">
+                <color rgba="0.7 0.7 0.7 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.25 0.05 0.3"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.8" mu2="0.8"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <joint name="bracket_to_sensor" type="revolute">
+        <parent link="mounting_bracket"/>
+        <child link="sensor_base"/>
+        <origin xyz="0 0 0.1" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.141592653589793" upper="3.141592653589793" effort="10.0" velocity="1.0" damping="0.1"/>
+        <dynamics damping="0.1" friction="0.01"/>
+    </joint>
+    <joint name="sensor_tilt" type="revolute">
+        <parent link="sensor_base"/>
+        <child link="sensor_lens"/>
+        <origin xyz="0 0.12 0" rpy="1.5707963267948966 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-1.5707963267948966" upper="1.5707963267948966" effort="5.0" velocity="1.0" damping="0.05"/>
+        <dynamics damping="0.05" friction="0.01"/>
+    </joint>
+</robot>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<robot name="sensor_mount">
+  <!-- Mount base -->
+  <link name="mount_base">
+    <visual>
+      <geometry>
+        <cylinder length="0.05" radius="0.03"/>
+      </geometry>
+      <material name="silver">
+        <color rgba="0.8 0.8 0.8 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.05" radius="0.03"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00026" ixy="0" ixz="0" iyy="0.00026" iyz="0" izz="0.000225"/>
+    </inertial>
+  </link>
+
+  <!-- Camera housing -->
+  <link name="camera_housing">
+    <visual>
+      <geometry>
+        <box size="0.04 0.06 0.02"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.04 0.06 0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.0000333" ixy="0" ixz="0" iyy="0.0000167" iyz="0" izz="0.0000433"/>
+    </inertial>
+  </link>
+
+  <!-- Pan-tilt joint -->
+  <joint name="mount_to_camera" type="revolute">
+    <parent link="mount_base"/>
+    <child link="camera_housing"/>
+    <origin xyz="0 0 0.035" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" effort="10" velocity="1"/>
+  </joint>
+
+  <!-- Lens -->
+  <link name="camera_lens">
+    <visual>
+      <geometry>
+        <cylinder length="0.01" radius="0.01"/>
+      </geometry>
+      <material name="glass">
+        <color rgba="0.2 0.2 0.6 0.8"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.01" radius="0.01"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.0000003" ixy="0" ixz="0" iyy="0.0000003" iyz="0" izz="0.0000005"/>
+    </inertial>
+  </link>
+
+  <!-- Lens joint -->
+  <joint name="camera_to_lens" type="fixed">
+    <parent link="camera_housing"/>
+    <child link="camera_lens"/>
+    <origin xyz="0 0.031 0" rpy="1.5708 0 0"/>
+  </joint>
+</robot>

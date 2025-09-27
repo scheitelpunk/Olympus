@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<robot name="camera_sensor_fixed">
+    <link name="sensor_base">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="2.0"/>
+            <inertia ixx="0.010417" iyy="0.010417" izz="0.013333" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.2 0.2 0.15"/>
+            </geometry>
+            <material name="plastic">
+                <color rgba="0.2 0.2 0.8 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.2 0.2 0.15"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.6" mu2="0.6"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <link name="sensor_lens">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.5"/>
+            <inertia ixx="0.000350" iyy="0.000350" izz="0.000400" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.04" length="0.06"/>
+            </geometry>
+            <material name="glass">
+                <color rgba="0.9 0.9 0.9 0.3"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.04" length="0.06"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.1" mu2="0.1"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <joint name="base_to_lens" type="fixed">
+        <parent link="sensor_base"/>
+        <child link="sensor_lens"/>
+        <origin xyz="0 0.12 0" rpy="1.5707963267948966 0 0"/>
+    </joint>
+</robot>

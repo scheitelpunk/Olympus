@@ -1,0 +1,190 @@
+<?xml version="1.0" ?>
+<robot name="conveyor_large">
+    <link name="base_link">
+        <inertial>
+            <origin xyz="0 0 0.065" rpy="0 0 0"/>
+            <mass value="109.85000000000001"/>
+            <inertia ixx="4.022341" iyy="62.036872" izz="65.749802" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0.065" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.6 0.65 0.13"/>
+            </geometry>
+            <material name="steel">
+                <color rgba="0.7 0.7 0.7 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.065" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.6 0.65 0.13"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.8" mu2="0.8"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <link name="belt_surface">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="16.900000000000002"/>
+            <inertia ixx="0.595584" iyy="9.520897" izz="10.115354" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.6 0.65 0.02"/>
+            </geometry>
+            <material name="rubber">
+                <color rgba="0.1 0.1 0.1 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.6 0.65 0.02"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="1.2" mu2="1.2"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <joint name="base_to_belt" type="fixed">
+        <parent link="base_link"/>
+        <child link="belt_surface"/>
+        <origin xyz="0 0 0.14" rpy="0 0 0"/>
+    </joint>
+    <link name="leg_1">
+        <inertial>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <mass value="5.0"/>
+            <inertia ixx="0.269792" iyy="0.269792" izz="0.006250" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.8"/>
+            </geometry>
+            <material name="steel">
+                <color rgba="0.7 0.7 0.7 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.8"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.8" mu2="0.8"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <joint name="base_to_leg_1" type="fixed">
+        <parent link="base_link"/>
+        <child link="leg_1"/>
+        <origin xyz="1.04 0.195 0" rpy="0 0 0"/>
+    </joint>
+    <link name="leg_2">
+        <inertial>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <mass value="5.0"/>
+            <inertia ixx="0.269792" iyy="0.269792" izz="0.006250" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.8"/>
+            </geometry>
+            <material name="steel">
+                <color rgba="0.7 0.7 0.7 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.8"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.8" mu2="0.8"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <joint name="base_to_leg_2" type="fixed">
+        <parent link="base_link"/>
+        <child link="leg_2"/>
+        <origin xyz="1.04 -0.195 0" rpy="0 0 0"/>
+    </joint>
+    <link name="leg_3">
+        <inertial>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <mass value="5.0"/>
+            <inertia ixx="0.269792" iyy="0.269792" izz="0.006250" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.8"/>
+            </geometry>
+            <material name="steel">
+                <color rgba="0.7 0.7 0.7 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.8"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.8" mu2="0.8"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <joint name="base_to_leg_3" type="fixed">
+        <parent link="base_link"/>
+        <child link="leg_3"/>
+        <origin xyz="-1.04 0.195 0" rpy="0 0 0"/>
+    </joint>
+    <link name="leg_4">
+        <inertial>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <mass value="5.0"/>
+            <inertia ixx="0.269792" iyy="0.269792" izz="0.006250" ixy="0.000000" ixz="0.000000" iyz="0.000000"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.8"/>
+            </geometry>
+            <material name="steel">
+                <color rgba="0.7 0.7 0.7 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.8"/>
+            </geometry>
+            <surface>
+                <friction>
+                    <ode mu="0.8" mu2="0.8"/>
+                </friction>
+            </surface>
+        </collision>
+    </link>
+    <joint name="base_to_leg_4" type="fixed">
+        <parent link="base_link"/>
+        <child link="leg_4"/>
+        <origin xyz="-1.04 -0.195 0" rpy="0 0 0"/>
+    </joint>
+</robot>

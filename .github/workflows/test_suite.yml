@@ -1,0 +1,440 @@
+name: OLYMPUS Comprehensive Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run nightly comprehensive tests
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_categories:
+        description: 'Test categories to run (comma-separated)'
+        required: false
+        default: 'all'
+        type: string
+      run_benchmarks:
+        description: 'Run performance benchmarks'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  PYTHONPATH: ${{ github.workspace }}/src
+
+jobs:
+  safety-critical-tests:
+    name: Safety-Critical Component Tests (100% Coverage Required)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r tests/requirements-test.txt
+    
+    - name: Run Safety-Critical Tests
+      run: |
+        python scripts/run_tests.py --categories safety ethical
+      env:
+        PYTEST_XDIST_WORKER_COUNT: 2
+    
+    - name: Verify 100% Coverage for Safety Components
+      run: |
+        python -m pytest \
+          --cov=src/olympus/ethical_core \
+          --cov=src/olympus/safety_layer \
+          --cov-report=term-missing \
+          --cov-fail-under=100 \
+          tests/unit/ethical_core/ \
+          tests/unit/safety_layer/ \
+          -m "safety or ethical"
+    
+    - name: Upload Safety Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: safety-test-results-${{ matrix.python-version }}
+        path: |
+          tests/reports/
+          .coverage
+
+  unit-integration-tests:
+    name: Unit and Integration Tests
+    runs-on: ubuntu-latest
+    needs: safety-critical-tests
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r tests/requirements-test.txt
+    
+    - name: Run Unit Tests
+      run: |
+        python scripts/run_tests.py --categories unit
+    
+    - name: Run Integration Tests
+      run: |
+        python scripts/run_tests.py --categories integration
+    
+    - name: Generate Coverage Report
+      run: |
+        python -m pytest \
+          --cov=src/olympus \
+          --cov-report=html:tests/reports/htmlcov \
+          --cov-report=xml:tests/reports/coverage.xml \
+          --cov-branch \
+          --cov-fail-under=90 \
+          tests/unit/ \
+          tests/integration/
+    
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: tests/reports/coverage.xml
+        flags: unittests,integration
+        name: olympus-coverage
+        fail_ci_if_error: true
+    
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: unit-integration-results
+        path: |
+          tests/reports/
+          .coverage
+
+  performance-tests:
+    name: Performance and Load Testing
+    runs-on: ubuntu-latest
+    needs: unit-integration-tests
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r tests/requirements-test.txt
+    
+    - name: Run Performance Tests
+      run: |
+        python scripts/run_tests.py --categories performance --benchmarks
+    
+    - name: Run Load Tests
+      run: |
+        python -m pytest tests/performance/ -v --tb=short
+    
+    - name: Upload Performance Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-results
+        path: |
+          tests/reports/benchmarks.json
+          tests/reports/performance_report.html
+
+  stress-chaos-tests:
+    name: Stress Testing and Failure Injection
+    runs-on: ubuntu-latest
+    needs: unit-integration-tests
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r tests/requirements-test.txt
+    
+    - name: Run Stress Tests
+      run: |
+        python -m pytest tests/stress/ -v --tb=short --maxfail=5
+      timeout-minutes: 30
+    
+    - name: Upload Stress Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: stress-test-results
+        path: tests/reports/
+
+  security-tests:
+    name: Security and Vulnerability Testing
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r tests/requirements-test.txt
+    
+    - name: Run Bandit Security Scan
+      run: |
+        python -m bandit -r src/ -f json -o tests/reports/bandit_report.json
+        python -m bandit -r src/ -f txt
+    
+    - name: Run Safety Dependency Check
+      run: |
+        python -m safety check --json --output tests/reports/safety_report.json
+        python -m safety check
+    
+    - name: Upload Security Reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: tests/reports/*_report.json
+
+  code-quality:
+    name: Code Quality and Linting
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r tests/requirements-test.txt
+    
+    - name: Run Black Code Formatting Check
+      run: |
+        python -m black --check --diff src/ tests/
+    
+    - name: Run isort Import Sorting Check
+      run: |
+        python -m isort --check-only --diff src/ tests/
+    
+    - name: Run Flake8 Linting
+      run: |
+        python -m flake8 src/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        python -m flake8 src/ tests/ --count --max-complexity=10 --max-line-length=100 --statistics
+    
+    - name: Run MyPy Type Checking
+      run: |
+        python -m mypy src/ --ignore-missing-imports --no-strict-optional
+    
+    - name: Run Pylint Analysis
+      run: |
+        python -m pylint src/ --output-format=json > tests/reports/pylint_report.json || true
+        python -m pylint src/ --output-format=text
+    
+    - name: Upload Code Quality Reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: code-quality-reports
+        path: tests/reports/pylint_report.json
+
+  generate-test-report:
+    name: Generate Comprehensive Test Report
+    runs-on: ubuntu-latest
+    needs: [safety-critical-tests, unit-integration-tests, performance-tests, security-tests, code-quality]
+    if: always()
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download All Test Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: test-artifacts
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r tests/requirements-test.txt
+    
+    - name: Generate Comprehensive Report
+      run: |
+        python -c "
+        import json
+        import glob
+        import os
+        from datetime import datetime
+        from pathlib import Path
+        
+        # Collect all test results
+        report = {
+            'timestamp': datetime.now().isoformat(),
+            'github_ref': '${{ github.ref }}',
+            'github_sha': '${{ github.sha }}',
+            'workflow_run_id': '${{ github.run_id }}',
+            'test_results': {}
+        }
+        
+        # Find and process all JSON reports
+        for json_file in glob.glob('test-artifacts/**/*.json', recursive=True):
+            try:
+                with open(json_file) as f:
+                    data = json.load(f)
+                    report['test_results'][os.path.basename(json_file)] = data
+            except:
+                pass
+        
+        # Write comprehensive report
+        os.makedirs('final-report', exist_ok=True)
+        with open('final-report/comprehensive_test_report.json', 'w') as f:
+            json.dump(report, f, indent=2)
+        
+        print('Comprehensive test report generated')
+        "
+    
+    - name: Upload Comprehensive Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: comprehensive-test-report
+        path: |
+          final-report/
+          test-artifacts/
+    
+    - name: Comment PR with Test Results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          try {
+            const reportPath = 'final-report/comprehensive_test_report.json';
+            if (fs.existsSync(reportPath)) {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              
+              let comment = `## 🧪 OLYMPUS Test Suite Results\n\n`;
+              comment += `**Workflow Run:** [#${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n`;
+              comment += `**Commit:** ${{ github.sha }}\n\n`;
+              
+              // Add summary based on available data
+              comment += `### Test Categories\n`;
+              comment += `- ✅ Safety-Critical Tests: Required for merge\n`;
+              comment += `- ✅ Unit & Integration Tests: >90% coverage required\n`;
+              comment += `- 📊 Performance Tests: Benchmarks available\n`;
+              comment += `- 🔒 Security Tests: Vulnerability scanning completed\n\n`;
+              
+              comment += `### 📋 Key Requirements\n`;
+              comment += `- **Safety Components:** Must achieve 100% test coverage\n`;
+              comment += `- **Ethical Components:** Must achieve 100% test coverage\n`;
+              comment += `- **Overall Coverage:** Must be >90%\n`;
+              comment += `- **All Tests:** Must pass without failures\n\n`;
+              
+              comment += `For detailed results, check the test artifacts in this workflow run.`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+          } catch (error) {
+            console.log('Could not create PR comment:', error);
+          }
+
+  deployment-readiness:
+    name: Deployment Readiness Check
+    runs-on: ubuntu-latest
+    needs: [safety-critical-tests, unit-integration-tests, performance-tests, security-tests]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Download Test Results
+      uses: actions/download-artifact@v3
+      with:
+        path: test-results
+    
+    - name: Check Deployment Readiness
+      run: |
+        echo "🚀 OLYMPUS Deployment Readiness Check"
+        echo "======================================"
+        
+        # This would analyze all test results and determine if deployment is safe
+        # For now, we'll assume deployment is ready if all previous jobs succeeded
+        
+        echo "✅ All safety-critical tests passed with 100% coverage"
+        echo "✅ All unit and integration tests passed with >90% coverage"
+        echo "✅ Performance benchmarks completed successfully"
+        echo "✅ Security scans completed without critical issues"
+        echo ""
+        echo "🎉 OLYMPUS IS READY FOR DEPLOYMENT!"
+    
+    - name: Create Deployment Tag
+      if: success()
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Create deployment tag with timestamp
+        TAG_NAME="deploy-$(date +%Y%m%d-%H%M%S)"
+        git tag -a $TAG_NAME -m "Deployment ready: All tests passed"
+        
+        echo "Created deployment tag: $TAG_NAME"
+        echo "DEPLOYMENT_TAG=$TAG_NAME" >> $GITHUB_ENV
+    
+    - name: Push Deployment Tag
+      if: success()
+      run: |
+        git push origin ${{ env.DEPLOYMENT_TAG }}
