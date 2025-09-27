@@ -1,0 +1,79 @@
+# System configuration
+system:
+  mode: "full"  # "full", "perception_only", "dream_only"
+  device: "cpu"  # "cuda" or "cpu"
+  log_level: "INFO"
+
+# Database configuration
+database:
+  host: "localhost"
+  port: 5432
+  database: "morpheus"
+  user: "morpheus_user"
+  password: "morpheus_pass"  # Use environment variable in production
+
+# GASM integration
+gasm:
+  enabled: true
+  roboting_path: "./GASM-Robotics"  # Relative path to GASM-Robotics
+
+# Perception configuration
+perception:
+  tactile:
+    enabled: true
+    sensitivity: 0.01  # Minimum force in Newtons
+    sampling_rate: 1000  # Hz
+    vibration_window: 0.1  # seconds
+    use_materials: true
+    
+  audio:
+    enabled: true
+    max_sources: 10
+    frequency_range: [20, 20000]  # Hz
+    speed_of_sound: 343.0  # m/s
+    doppler_enabled: true
+    
+  visual:
+    enabled: true
+    use_gasm: true  # Use GASM for visual features
+    feature_dim: 128
+
+# Neural networks configuration
+networks:
+  fusion:
+    input_dims:
+      tactile: 64
+      audio: 32
+      visual: 128
+    hidden_dim: 256
+    output_dim: 128
+    num_heads: 8
+    dropout: 0.1
+    
+  predictor:
+    state_dim: 128
+    action_dim: 7  # 6DOF + gripper
+    hidden_dim: 256
+    output_dim: 128
+    uncertainty_estimation: true
+
+# Dream configuration
+dream:
+  enabled: true
+  auto_dream: false  # Automatically dream when idle
+  auto_dream_threshold: 1000  # Experiences before auto-dream
+  replay_speed: 10.0
+  variation_factor: 0.2
+  exploration_rate: 0.3
+  consolidation_threshold: 0.8
+  min_improvement: 0.1
+  max_iterations: 1000
+  parallel_dreams: 4
+
+# Performance settings
+performance:
+  batch_size: 32
+  max_memory_gb: 4
+  cache_size: 1000
+  cleanup_interval_hours: 24
+  retention_days: 30

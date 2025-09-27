@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: morpheus_db
+    environment:
+      POSTGRES_DB: morpheus
+      POSTGRES_USER: morpheus_user
+      POSTGRES_PASSWORD: morpheus_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - morpheus_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - morpheus_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U morpheus_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    container_name: morpheus_adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - morpheus_net
+    depends_on:
+      - postgres
+
+  morpheus:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: morpheus_app
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=morpheus
+      - DATABASE_USER=morpheus_user
+      - DATABASE_PASSWORD=morpheus_pass
+      - GASM_ROBOTING_PATH=/app/GASM-Robotics
+    volumes:
+      - ../src:/app/src
+      - ../configs:/app/configs
+      - ../GASM-Robotics:/app/GASM-Robotics:ro
+    networks:
+      - morpheus_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  morpheus_data:
+
+networks:
+  morpheus_net:
+    driver: bridge
