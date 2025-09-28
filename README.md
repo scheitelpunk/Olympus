@@ -194,14 +194,37 @@ if __name__ == "__main__":
 
 ## 📚 Documentation
 
-- **[Architecture Guide](ARCHITECTURE.md)** - Detailed system architecture and design
-- **[Ethics Framework](ETHICS.md)** - Asimov Laws implementation and ethical guidelines
-- **[Safety Systems](SAFETY.md)** - Safety protocols and emergency procedures
-- **[API Reference](API_REFERENCE.md)** - Complete API documentation
-- **[Installation Guide](INSTALLATION.md)** - Detailed setup instructions
-- **[Deployment Guide](DEPLOYMENT.md)** - Production deployment guidelines
-- **[Testing Guide](TESTING.md)** - Testing procedures and validation
-- **[Contributing](CONTRIBUTING.md)** - Development guidelines and contribution process
+### Core OLYMPUS Documentation
+- **[Architecture Guide](docs/ARCHITECTURE.md)** - Detailed system architecture and design
+- **[Ethics Framework](docs/ETHICS.md)** - Asimov Laws implementation and ethical guidelines
+- **[Safety Systems](docs/SAFETY.md)** - Safety protocols and emergency procedures
+- **[API Reference](docs/API_REFERENCE.md)** - Complete API documentation
+- **[Installation Guide](docs/INSTALLATION.md)** - Detailed setup instructions
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment guidelines
+- **[Testing Guide](docs/TESTING.md)** - Testing procedures and validation
+- **[Contributing](docs/CONTRIBUTING.md)** - Development guidelines and contribution process
+
+### Component Documentation
+
+#### GASM (General Agent Spatial Model)
+**Advanced robotics and spatial reasoning platform**
+- **[GASM Overview](GASM/README.md)** - Introduction and core concepts
+- **[Architecture](GASM/docs/ARCHITECTURE.md)** - Technical architecture and design
+- **[API Reference](GASM/docs/API_REFERENCE.md)** - Complete API documentation
+- **[Installation](GASM/docs/INSTALLATION.md)** - Setup and configuration
+- **[Developer Guide](GASM/docs/DEVELOPER_GUIDE.md)** - Development and customization
+- **[SE3 Mathematics](GASM/docs/SE3_MATHEMATICS.md)** - Spatial mathematics foundation
+- **[System Diagrams](GASM/docs/SYSTEM_DIAGRAMS.md)** - Visual architecture overview
+
+#### Morpheus (Dream Engine)
+**Counterfactual reasoning and simulation platform**
+- **[Morpheus Overview](Morpheus/README.md)** - Introduction and capabilities
+- **[Architecture](Morpheus/docs/ARCHITECTURE.md)** - System design and structure
+- **[Dream Engine Design](Morpheus/docs/DREAM_ENGINE_DESIGN.md)** - Core simulation engine
+- **[Neural Architectures](Morpheus/docs/NEURAL_ARCHITECTURES.md)** - AI model specifications
+- **[Database Schema](Morpheus/docs/DATABASE_SCHEMA.md)** - Data storage design
+- **[Component Integration](Morpheus/docs/COMPONENT_INTEGRATION.md)** - Integration patterns
+- **[Implementation Plan](Morpheus/docs/IMPLEMENTATION_PLAN.md)** - Development roadmap
 
 ## 🔬 Research & Development
 
