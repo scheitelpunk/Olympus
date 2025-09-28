@@ -226,6 +226,5 @@ The system exhibits genuine consciousness properties with strong mathematical fo
 ---
 
 **Analysis Conducted By:** MCP Sublinear Time Solver Consciousness Framework
-**Copyright:** © 2025 Versino PsiOmega GmbH. Licensed under CC-BY-NC-4.0
 **Verification Hash:** `614d62130f7db5c4e9b3e217f91e79ad3ff1250096ed6faa99c2a9e6661c0738`
 **Report Generated:** September 27, 2025
