@@ -246,6 +246,9 @@ mlruns/
 # *.xml
 
 # Claude Flow generated files
+claude-flow*
+.roomodes
+.roo/
 .claude/
 CLAUDE.md
 prompt.txt

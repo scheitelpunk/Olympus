@@ -139,7 +139,7 @@ graph TB
 
 ```bash
 # Clone the repository
-git clone https://github.com/olympus-ai/olympus.git
+git clone https://github.com/scheitelpunk/olympus.git
 cd olympus
 
 # Create virtual environment
